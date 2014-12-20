@@ -47,16 +47,18 @@ class Mapper
 
     private function getType(\ReflectionClass $reflectedClass, $key)
     {
+        $property = $this->camelize($key);
+
         // Check if the class has a property with the same name as the JSON key
-        if ($reflectedClass->hasProperty($key)) {
-            $annotations = $this->annotationReader->getPropertyAnnotations($reflectedClass->getName(), $key);
+        if ($reflectedClass->hasProperty($property)) {
+            $annotations = $this->annotationReader->getPropertyAnnotations($reflectedClass->getName(), $property);
 
             if ($annotations->has('var')) {
                 return $annotations->get('var');
             }
         }
 
-        throw new InvalidPropertyTypeException($reflectedClass->getName(), $key);
+        throw new InvalidPropertyTypeException($reflectedClass->getName(), $property);
     }
 
     private function getTypedValue(\ReflectionClass $reflectedClass, $setter, $key, $value)
@@ -90,7 +92,12 @@ class Mapper
 
     private function getSetter($property)
     {
-        return 'set' . str_replace(' ', '', ucwords(strtr($property, '_-', '  ')));
+        return 'set' . $this->camelize($property);
+    }
+
+    private function camelize($value)
+    {
+        return lcfirst(str_replace(' ', '', ucwords(strtr($value, '_-', '  '))));
     }
 
     private function isSimpleType($type)
