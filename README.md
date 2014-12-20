@@ -79,13 +79,13 @@ $mapper = new \Xenolope\Cartographer\Mapper();
 
 // PHP 5.4
 $object = $mapper->mapString(
-    '{"name":"Liz Lemon","address": {"street": "168 Riverside Drive","city": "New York"}}',
+    '{"name":"Liz Lemon","address":{"street":"168 Riverside Dr.","city":"New York"}}',
     'Vendor\Package\Entity\Contact'
 );
 
 // PHP >=5.5
 $object = $mapper->mapString(
-    '{"name":"Liz Lemon","address": {"street": "168 Riverside Drive","city": "New York"}}',
+    '{"name":"Liz Lemon","address":{"street":"168 Riverside Dr.","city":"New York"}}',
     Contact::class
 );
 
@@ -93,7 +93,7 @@ $object = $mapper->mapString(
 
 // This might happen automatically in your Request class, for example
 $jsonDocument = json_decode(
-    '{"name":"Liz Lemon","address": {"street": "168 Riverside Drive","city": "New York"}}',
+    '{"name":"Liz Lemon","address":{"street":"168 Riverside Dr.","city":"New York"}}',
     true
 );
 
@@ -102,7 +102,7 @@ $object = $mapper->map($jsonDocument, 'Vendor\Package\Entity\Contact');
 
 // PHP >= 5.5
 $object = $mapper->map(
-    '{"name":"Liz Lemon","address": {"street": "168 Riverside Drive","city": "New York"}}',
+    '{"name":"Liz Lemon","address":{"street":"168 Riverside Dr.","city":"New York"}}',
     Contact::class
 );
 ```
