@@ -12,11 +12,6 @@ class Mapper
 {
 
     /**
-     * @var bool
-     */
-    private $camelCaseProperties = true;
-
-    /**
      * @var ReaderInterface
      */
     private $annotationReader;
@@ -24,14 +19,6 @@ class Mapper
     public function __construct(ReaderInterface $annotationReader = null)
     {
         $this->annotationReader = $annotationReader ?: new Reader(new Parser(), new ArrayCache());
-    }
-
-    /**
-     * @param boolean $camelCaseProperties
-     */
-    public function setCamelCaseProperties($camelCaseProperties)
-    {
-        $this->camelCaseProperties = $camelCaseProperties;
     }
 
     public function mapString($json, $objectClass)
@@ -103,13 +90,7 @@ class Mapper
 
     private function getSetter($property)
     {
-        if (!$this->camelCaseProperties) {
-            $name = strtolower(preg_replace('~(?<=\\w)([A-Z])~', '_$1', $property));
-        } else {
-            $name = str_replace(' ', '', ucwords(strtr($property, '_-', '  ')));
-        }
-
-        return 'set' . $name;
+        return 'set' . str_replace(' ', '', ucwords(strtr($property, '_-', '  ')));
     }
 
     private function isSimpleType($type)
