@@ -107,6 +107,13 @@ $object = $mapper->map(
 );
 ```
 
+## Thanks
+
+This library was inspired by:
+
+* [`fasterxml/jackson-databind`](https://github.com/FasterXML/jackson-databind) for Java
+* [`netresearch/jsonmapper`](https://github.com/netresearch/jsonmapper) for PHP
+
 ## License
 
 Cartographer is released under the MIT License; please see [LICENSE](LICENSE) for more information.
