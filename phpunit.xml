@@ -1,0 +1,19 @@
+<phpunit bootstrap="./vendor/autoload.php" backupGlobals="false" colors="true" codecoverage="true" haltonfailure="true" haltonerror="true">
+    <testsuite name="Cartographer">
+        <directory>./tests</directory>
+    </testsuite>
+    <logging>
+        <log type="coverage-html" target="build/coverage"/>
+    </logging>
+    <filter>
+        <whitelist>
+            <directory suffix=".php">./src</directory>
+        </whitelist>
+        <blacklist>
+            <directory suffix=".php">./tests</directory>
+        </blacklist>
+        <blacklist>
+            <directory suffix=".php">./vendor</directory>
+        </blacklist>
+    </filter>
+</phpunit>
