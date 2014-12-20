@@ -38,7 +38,8 @@ class Contact
     private $address;
 
     /**
-     * Note, this property doesn't have a @var docblock, but the corresponding setter below *does* have a type hint
+     * Note, this property doesn't have a @var docblock, but the corresponding setter
+     * below *does* have a type hint
      */
     private $secondaryAddress;
 
@@ -77,21 +78,33 @@ $mapper = new \Xenolope\Cartographer\Mapper();
 // Map a JSON string to a POPO
 
 // PHP 5.4
-$object = $mapper->mapString('{"name":"Liz Lemon","address": {"street": "168 Riverside Drive","city": "New York"}}', 'Vendor\Package\Entity\Contact');
+$object = $mapper->mapString(
+    '{"name":"Liz Lemon","address": {"street": "168 Riverside Drive","city": "New York"}}',
+    'Vendor\Package\Entity\Contact'
+);
 
 // PHP >=5.5
-$object = $mapper->mapString('{"name":"Liz Lemon","address": {"street": "168 Riverside Drive","city": "New York"}}', Contact::class);
+$object = $mapper->mapString(
+    '{"name":"Liz Lemon","address": {"street": "168 Riverside Drive","city": "New York"}}',
+    Contact::class
+);
 
 // Map an already decoded (to array) JSON document to a POPO
 
 // This might happen automatically in your Request class, for example
-$jsonDocument = json_decode('{"name":"Liz Lemon","address": {"street": "168 Riverside Drive","city": "New York"}}', true);
+$jsonDocument = json_decode(
+    '{"name":"Liz Lemon","address": {"street": "168 Riverside Drive","city": "New York"}}',
+    true
+);
 
 // PHP 5.4
 $object = $mapper->map($jsonDocument, 'Vendor\Package\Entity\Contact');
 
 // PHP >= 5.5
-$object = $mapper->map('{"name":"Liz Lemon","address": {"street": "168 Riverside Drive","city": "New York"}}', Contact::class);
+$object = $mapper->map(
+    '{"name":"Liz Lemon","address": {"street": "168 Riverside Drive","city": "New York"}}',
+    Contact::class
+);
 ```
 
 ## License
