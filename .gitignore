@@ -1,0 +1,17 @@
+### PhpStorm ###
+*.iml
+
+## Directory-based project format:
+.idea/
+
+## File-based project format:
+*.ipr
+*.iws
+
+# JIRA plugin
+atlassian-ide-plugin.xml
+
+### Composer ###
+composer.lock
+composer.phar
+vendor/

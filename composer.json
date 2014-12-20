@@ -1,0 +1,22 @@
+{
+  "name": "xenolope/cartographer",
+  "description": "A super-simple library to map JSON documents to objects, similar to Java's Jackson",
+  "license": "MIT",
+  "autoload": {
+    "psr-4": {
+      "Xenolope\\Cartographer\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Xenolope\\Cartographer\\": "tests/"
+    }
+  },
+  "require": {
+    "php": ">=5.4",
+    "minime/annotations": "~2.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "~4.0"
+  }
+}
