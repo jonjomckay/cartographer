@@ -2,6 +2,8 @@
 namespace Xenolope\Cartographer;
 
 use Xenolope\Cartographer\Entity\Contact;
+use Xenolope\Cartographer\Entity\ContactInvalidVarButValidSetterType;
+use Xenolope\Cartographer\Entity\ContactWithAddressArray;
 
 class MapperTest extends \PHPUnit_Framework_TestCase
 {
@@ -33,13 +35,12 @@ class MapperTest extends \PHPUnit_Framework_TestCase
     {
         $this->setExpectedException('Xenolope\Cartographer\Exception\InvalidPropertyTypeException');
 
-        /** @var Contact $result */
         $this->mapper->mapString(static::$json, 'Xenolope\Cartographer\Entity\ContactInvalidPropertyType');
     }
 
     public function testMapStringWithInvalidVarButValidSetterType()
     {
-        /** @var Contact $result */
+        /** @var ContactInvalidVarButValidSetterType $result */
         $result = $this->mapper->mapString(static::$json, 'Xenolope\Cartographer\Entity\ContactInvalidVarButValidSetterType');
 
         $this->assertEquals('Liz Lemon', $result->getName());
@@ -52,7 +53,20 @@ class MapperTest extends \PHPUnit_Framework_TestCase
     {
         $this->setExpectedException('Xenolope\Cartographer\Exception\InvalidSetterTypeException');
 
-        /** @var Contact $result */
         $this->mapper->mapString(static::$json, 'Xenolope\Cartographer\Entity\ContactInvalidSetterType');
+    }
+
+    public function testMapStringWithArrayProperty()
+    {
+        /** @var ContactWithAddressArray $result */
+        $result = $this->mapper->mapString('{"name":"Liz Lemon","addresses": [{"street": "160 Riverside Drive","city": "New York"}, {"street": "168 Riverside Drive","city": "New York"}]}', 'Xenolope\Cartographer\Entity\ContactWithAddressArray');
+
+        $this->assertEquals('Liz Lemon', $result->getName());
+        $this->assertContainsOnlyInstancesOf('Xenolope\Cartographer\Entity\Address', $result->getAddresses());
+        $this->assertCount(2, $result->getAddresses());
+        $this->assertEquals('160 Riverside Drive', $result->getAddresses()[0]->getStreet());
+        $this->assertEquals('New York', $result->getAddresses()[0]->getCity());
+        $this->assertEquals('168 Riverside Drive', $result->getAddresses()[1]->getStreet());
+        $this->assertEquals('New York', $result->getAddresses()[1]->getCity());
     }
 }

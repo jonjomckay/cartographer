@@ -45,7 +45,7 @@ class Mapper
         return $object;
     }
 
-    private function getType(\ReflectionClass $reflectedClass, $key)
+    private function getVarType(\ReflectionClass $reflectedClass, $key)
     {
         $property = $this->camelize($key);
 
@@ -63,41 +63,60 @@ class Mapper
 
     private function getTypedValue(\ReflectionClass $reflectedClass, $setter, $key, $value)
     {
-        $type = $this->getType($reflectedClass, $key);
+        $type = $this->getVarType($reflectedClass, $key);
 
         // Check if the type is a simple type (string, int, bool, etc.)
         if ($this->isSimpleType($type)) {
             // @todo Not sure if this is the best way (see http://php.net/manual/en/function.settype.php)
             settype($value, $type);
             return $value;
+        } elseif (substr($type, -2) === '[]') {
+            $array = new \SplFixedArray(count($value));
+            $arrayObjectType = $this->getType($reflectedClass, rtrim($type, '[]'), $setter);
+
+            foreach ($value as $index => $arrayObject) {
+                $array[$index] = $this->map($arrayObject, $arrayObjectType);
+            }
+
+            return $array;
         } else {
-            // Check if the type is namespaced, if not then create the full namespaced class and instantiate it
-            if (0 !== strpos($type, '\\')) {
-                $type = $reflectedClass->getNamespaceName() . '\\' . $type;
-            }
-
-            // If the parsed class doesn't exist (class could be using a 'use'), look at the setter
-            if (!class_exists($type)) {
-                $setterParameters = $reflectedClass->getMethod($setter)->getParameters();
-                if (count($setterParameters) > 0 && $setterParameters[0]->getClass() !== null) {
-                    $type = $setterParameters[0]->getClass()->getName();
-                } else {
-                    throw new InvalidSetterTypeException($reflectedClass->getName(), $setter);
-                }
-            }
-
-            return $this->map($value, $type);
+            return $this->map($value, $this->getType($reflectedClass, $type, $setter));
         }
     }
 
     private function getSetter($property)
     {
-        return 'set' . $this->camelize($property);
+        return 'set' . $this->classify($property);
+    }
+
+    private function getType(\ReflectionClass $reflectedClass, $varType, $setter)
+    {
+        // Check if the type is namespaced, if not then create the full namespaced class and instantiate it
+        if (0 !== strpos($varType, '\\')) {
+            $varType = $reflectedClass->getNamespaceName() . '\\' . $varType;
+        }
+
+        // If the parsed class doesn't exist (class could be using a 'use'), look at the setter
+        if (!class_exists($varType)) {
+            $setterParameters = $reflectedClass->getMethod($setter)->getParameters();
+            if (count($setterParameters) > 0 && $setterParameters[0]->getClass() !== null) {
+                $varType = $setterParameters[0]->getClass()->getName();
+            } else {
+                throw new InvalidSetterTypeException($reflectedClass->getName(), $setter);
+            }
+        }
+
+        return $varType;
     }
 
     private function camelize($value)
     {
-        return lcfirst(str_replace(' ', '', ucwords(strtr($value, '_-', '  '))));
+        return lcfirst($this->classify($value));
+    }
+
+    private function classify($value)
+    {
+        return str_replace(' ', '', ucwords(strtr($value, '_-', '  ')));
     }
 
     private function isSimpleType($type)
