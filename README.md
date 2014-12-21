@@ -127,6 +127,7 @@ $object = $mapper->map(
 ## Roadmap
 
 * Add custom property mapping, for when JSON properties don't match with POPO properties
+* Maybe add in support for serializing a POPO to JSON
 
 ## Thanks
 
