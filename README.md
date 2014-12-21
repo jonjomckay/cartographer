@@ -21,7 +21,11 @@ The library can be installed with Composer, by including the following in your `
 
 ### POPOs
 
-Your POPOs must have a property and corresponding setter, with either the property having a `@var ClassName` docblock, or the setter having a type hint:
+Your POPOs must have a property and corresponding setter, with either the property having a `@var ClassName` docblock, or the setter having a type hint.
+
+Setters are called directly, and properties are never touched, even if they're declared `public` (though this might be added in a later version).
+
+Simple values are converted to the types given in their `@var` docblocks (using `settype()`), objects are created based on the class specified in the `@var` docblocks, and arrays of objects are also created, and can be specified with the `@var ClassName[]` notation.
 
 ```php
 class Contact
@@ -42,6 +46,11 @@ class Contact
      * below *does* have a type hint
      */
     private $secondaryAddress;
+
+    /**
+     * @var Note[]
+     */
+    private $notes;
 
     /**
      * @param string $name
@@ -65,6 +74,14 @@ class Contact
     public function setAddress(Address $secondaryAddress)
     {
         $this->secondaryAddress = $secondaryAddress;
+    }
+
+    /**
+     * @param Note[] $notes
+     */
+    public function setNotes($notes)
+    {
+        $this->notes = $notes;
     }
 }
 ```
@@ -106,6 +123,10 @@ $object = $mapper->map(
     Contact::class
 );
 ```
+
+## Roadmap
+
+* Add custom property mapping, for when JSON properties don't match with POPO properties
 
 ## Thanks
 
