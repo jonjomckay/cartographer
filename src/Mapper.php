@@ -7,6 +7,7 @@ use Minime\Annotations\Parser;
 use Minime\Annotations\Reader;
 use Xenolope\Cartographer\Exception\InvalidPropertyTypeException;
 use Xenolope\Cartographer\Exception\InvalidSetterTypeException;
+use Xenolope\Cartographer\Exception\JsonDecodingException;
 
 class Mapper
 {
@@ -23,7 +24,12 @@ class Mapper
 
     public function mapString($json, $objectClass)
     {
-        return $this->map(json_decode($json, true), $objectClass);
+        $decodedJson = json_decode($json, true);
+        if (!$decodedJson) {
+            throw new JsonDecodingException(json_last_error_msg());
+        }
+
+        return $this->map($decodedJson, $objectClass);
     }
 
     public function map(array $json, $objectClass)

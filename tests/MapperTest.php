@@ -31,6 +31,13 @@ class MapperTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('New York', $result->getAddress()->getCity());
     }
 
+    public function testMapStringWithInvalidJson()
+    {
+        $this->setExpectedException('Xenolope\Cartographer\Exception\JsonDecodingException');
+
+        $this->mapper->mapString('{£${{', 'Xenolope\Cartographer\Entity\Contact');
+    }
+
     public function testMapStringWithInvalidPropertyType()
     {
         $this->setExpectedException('Xenolope\Cartographer\Exception\InvalidPropertyTypeException');
